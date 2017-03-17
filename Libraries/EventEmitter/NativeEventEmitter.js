@@ -41,6 +41,18 @@ class NativeEventEmitter extends EventEmitter {
     return super.addListener(eventType, listener, context);
   }
 
+  once(eventType: string, listener: Function, context: ?Object): EmitterSubscription {
+    const subscription = this.addListener(
+      eventType, 
+      function(data: ?Object) {
+        subscription.remove();
+        listener(data);
+      }, 
+      contest
+    );
+    return subscription;
+  }
+
   removeAllListeners(eventType: string) {
     invariant(eventType, 'eventType argument is required.');
     if (Platform.OS === 'ios') {
